@@ -47,11 +47,11 @@ def cli(size, min_mtime, max_mtime, null):
                 continue
 
         if min_mtime:
-            if stat.mtime < min_mtime:
+            if stat.st_mtime < min_mtime:
                 continue
 
         if min_mtime:
-            if stat.mtime > max_mtime:
+            if stat.st_mtime > max_mtime:
                 continue
 
         print(line)
