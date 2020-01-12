@@ -12,7 +12,6 @@ from shutil import get_terminal_size
 ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 #ic.disable()
 
-
 #'st_atime'
 #'st_atime_ns'
 #'st_blksize'
