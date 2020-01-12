@@ -35,12 +35,14 @@ ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 @click.option("--size", type=int)
 @click.option("--min-mtime", type=int)
 @click.option("--max-mtime", type=int)
+@click.option("--empty-dir", is_flag=True)
 @click.option("--exists", is_flag=True)
 @click.option("--null", is_flag=True)  # todo
-def cli(size, min_mtime, max_mtime, exists, null):
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null):
 
+    # todo null, see func from irc
     if exists:
-        verify(maxone([size, min_mtime, max_mtime, exists]))
+        verify(maxone([size, min_mtime, max_mtime, exists, empty_dir]))
 
     for line in sys.stdin:
         line = line[:-1]
@@ -63,6 +65,13 @@ def cli(size, min_mtime, max_mtime, exists, null):
 
         if max_mtime:
             if stat.st_mtime > max_mtime:
+                continue
+
+        if empty_dir:
+            line_path = Path(line)
+            if not line_path.is_dir():
+                continue
+            if len(list(line_path.glob('*'))) > 0:
                 continue
 
         print(line)
