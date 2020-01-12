@@ -4,6 +4,8 @@ import os
 import sys
 import click
 from pathlib import Path
+from uhashfs.utils import maxone
+from uhashfs.utils import verify
 from icecream import ic
 ic.configureOutput(includeContext=True)
 from shutil import get_terminal_size
@@ -34,13 +36,23 @@ ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 @click.option("--size", type=int)
 @click.option("--min-mtime", type=int)
 @click.option("--max-mtime", type=int)
+@click.option("--exists", is_flag=True)
 @click.option("--null", is_flag=True)  # todo
-def cli(size, min_mtime, max_mtime, null):
+def cli(size, min_mtime, max_mtime, exists, null):
+
+    if exists:
+        verify(maxone([size, min_mtime, max_mtime, exists]))
 
     for line in sys.stdin:
         line = line[:-1]
 
-        stat = os.stat(line)
+        try:
+            stat = os.stat(line)
+        except FileNotFoundError as e:
+            if exists:
+                continue
+            else:
+                raise e
 
         if size:
             if stat.st_size < size:
