@@ -75,9 +75,6 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
     #for line in sys.stdin:
     #    line = line[:-1]
 
-        if b'glide.1' in line:
-            ic(line)
-            #ic(stat)
         try:
             stat = os.stat(line)
             if b'glide.1' in line:
@@ -93,11 +90,13 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
                 continue
 
         if min_mtime:
-            if stat.st_mtime <= min_mtime:
+            if b'glide.1' in line:
+                ic(line)
+            if stat.st_mtime < min_mtime:
                 continue
 
         if max_mtime:
-            if stat.st_mtime >= max_mtime:
+            if stat.st_mtime > max_mtime:
                 continue
 
         if empty_dir:
