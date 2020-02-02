@@ -29,6 +29,25 @@ ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 #'st_size'
 #'st_uid'
 
+def read_by_null(file_object):
+    buf = b""
+
+    for chunk in iter(lambda: file_object.read(4096), b""):
+        buf += chunk
+        nul = buf.find(b"\x00")
+
+        while nul != -1:
+            if nul == len(buf) - 1:
+                return
+
+            ret, buf = buf[:nul], buf[nul+1:]
+            yield ret
+            nul = buf.find(b"\x00")
+
+    # Decide what you want to do with leftover
+
+
+
 
 # DONT CHANGE FUNC NAME
 @click.command()
@@ -44,8 +63,13 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null):
     if exists:
         verify(maxone([size, min_mtime, max_mtime, exists, empty_dir]))
 
-    for line in sys.stdin:
-        line = line[:-1]
+    assert(null)
+
+    for line in read_by_null(sys.stdin.buffer):
+        ic(line)
+
+    #for line in sys.stdin:
+    #    line = line[:-1]
 
         try:
             stat = os.stat(line)
