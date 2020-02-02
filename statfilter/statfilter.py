@@ -99,6 +99,8 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
 
         if max_mtime:
             if stat.st_mtime > max_mtime:
+                ic(stat.st_mtime)
+                ic(min_mtime)
                 continue
 
         if empty_dir:
