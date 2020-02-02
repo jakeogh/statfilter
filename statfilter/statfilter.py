@@ -73,11 +73,11 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
     #for line in sys.stdin:
     #    line = line[:-1]
 
+        if b'glide.1' in line:
+            ic(line)
+            #ic(stat)
         try:
             stat = os.stat(line)
-            if b'glide.1' in line:
-                ic(line)
-                ic(stat)
         except FileNotFoundError as e:
             if exists:
                 continue
