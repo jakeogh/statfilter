@@ -59,8 +59,9 @@ def read_by_null(file_object):
 @click.option("--empty-dir", is_flag=True)
 @click.option("--exists", is_flag=True)
 @click.option("--null", is_flag=True)  # todo
+@click.option("--precise", is_flag=True)  # todo
 @click.option("--verbose", is_flag=True)  # todo
-def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, verbose):
 
     # todo null, see func from irc
     if exists:
@@ -89,18 +90,23 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
             if stat.st_size < size:
                 continue
 
+        if precise:
+            st_mtime = stat.st_mtime
+        else:
+            st_mtime = int(stat.st_mtime)
+
         if min_mtime:
-            if b'glide.1' in line:
-                ic(line)
+            #if b'glide.1' in line:
+            #    ic(line)
             if stat.st_mtime < min_mtime:
-                ic(stat.st_mtime)
-                ic(min_mtime)
+                #ic(stat.st_mtime)
+                #ic(min_mtime)
                 continue
 
         if max_mtime:
             if stat.st_mtime > max_mtime:
-                ic(stat.st_mtime)
-                ic(min_mtime)
+                #ic(stat.st_mtime)
+                #ic(min_mtime)
                 continue
 
         if empty_dir:
