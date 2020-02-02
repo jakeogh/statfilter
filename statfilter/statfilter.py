@@ -59,7 +59,6 @@ def read_by_byte(file_object, byte):    # by ikanobori
 @click.option("--verbose", is_flag=True)
 def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, verbose):
 
-    ic(min_mtime)
     if count:
         count = 0
 
@@ -83,9 +82,9 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, ver
                 raise e
 
         if not precise:
-            if min_mtime is not False:
+            if min_mtime is not None:
                 min_mtime = int(min_mtime)
-            if max_mtime is not False:
+            if max_mtime is not None:
                 max_mtime = int(max_mtime)
 
         if precise:
@@ -93,15 +92,15 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, ver
         else:
             st_mtime = int(stat.st_mtime)
 
-        if size is not False:
+        if size is not None:
             if stat.st_size < size:
                 continue
 
-        if min_mtime is not False:
+        if min_mtime is not None:
             if st_mtime < min_mtime:
                 continue
 
-        if max_mtime is not False:
+        if max_mtime is not None:
             if st_mtime > max_mtime:
                 continue
 
