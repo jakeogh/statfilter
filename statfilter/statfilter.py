@@ -93,6 +93,8 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
             if b'glide.1' in line:
                 ic(line)
             if stat.st_mtime < min_mtime:
+                ic(stat.st_mtime)
+                ic(min_mtime)
                 continue
 
         if max_mtime:
