@@ -68,7 +68,7 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
 
     for line in read_by_null(sys.stdin.buffer):
         if verbose:
-            ic(line)
+            print(repr(line))
 
     #for line in sys.stdin:
     #    line = line[:-1]
