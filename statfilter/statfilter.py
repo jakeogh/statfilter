@@ -39,6 +39,7 @@ def read_by_null(file_object):
 
         while nul != -1:
             if nul == len(buf) - 1:
+                print("returning")
                 return
 
             ret, buf = buf[:nul], buf[nul+1:]
