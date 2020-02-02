@@ -4,13 +4,12 @@ import os
 import sys
 import click
 from pathlib import Path
-from uhashfs.utils import maxone
-from uhashfs.utils import verify
+from kcl.assertops import maxone
+from kcl.assertops import verify
 from icecream import ic
 ic.configureOutput(includeContext=True)
 from shutil import get_terminal_size
 ic.lineWrapWidth, _ = get_terminal_size((80, 20))
-#ic.disable()
 
 #'st_atime'
 #'st_atime_ns'
@@ -29,13 +28,14 @@ ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 #'st_size'
 #'st_uid'
 
-def read_by_null(file_object):
+
+def read_by_byte(file_object, byte):    # by ikanobori
     buf = b""
 
     for chunk in iter(lambda: file_object.read(4096), b""):
         #ic(chunk)
         buf += chunk
-        nul = buf.find(b"\x00")
+        nul = buf.find(byte)
 
         while nul != -1:
             if nul == len(buf) - 1:
@@ -44,69 +44,60 @@ def read_by_null(file_object):
 
             ret, buf = buf[:nul], buf[nul+1:]
             yield ret
-            nul = buf.find(b"\x00")
+            nul = buf.find(byte)
 
-    # Decide what you want to do with leftover
-
-
+    # TODO: Decide what you want to do with leftover
 
 
-# DONT CHANGE FUNC NAME
 @click.command()
 @click.option("--size", type=int)
-@click.option("--min-mtime", type=int)
-@click.option("--max-mtime", type=int)
+@click.option("--min-mtime", type=float)
+@click.option("--max-mtime", type=float)
 @click.option("--empty-dir", is_flag=True)
 @click.option("--exists", is_flag=True)
-@click.option("--null", is_flag=True)  # todo
-@click.option("--precise", is_flag=True)  # todo
-@click.option("--verbose", is_flag=True)  # todo
+@click.option("--null", is_flag=True)
+@click.option("--precise", is_flag=True)
+@click.option("--verbose", is_flag=True)
 def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, verbose):
 
-    # todo null, see func from irc
     if exists:
         verify(maxone([size, min_mtime, max_mtime, exists, empty_dir]))
 
-    assert(null)
+    byte = b'\n'
+    if null:
+        byte = b'\x00'
 
-    for line in read_by_null(sys.stdin.buffer):
+    for line in read_by_byte(sys.stdin.buffer, byte=byte):
         if verbose:
-            print(repr(line))
-
-    #for line in sys.stdin:
-    #    line = line[:-1]
+            ic(line)
 
         try:
             stat = os.stat(line)
-            if b'glide.1' in line:
-                ic(stat)
         except FileNotFoundError as e:
             if exists:
                 continue
             else:
                 raise e
 
-        if size:
-            if stat.st_size < size:
-                continue
+        if not precise:
+            min_mtime = int(min_mtime)
+            max_mtime = int(max_mtime)
 
         if precise:
             st_mtime = stat.st_mtime
         else:
             st_mtime = int(stat.st_mtime)
 
+        if size:
+            if stat.st_size < size:
+                continue
+
         if min_mtime:
-            #if b'glide.1' in line:
-            #    ic(line)
             if st_mtime < min_mtime:
-                #ic(stat.st_mtime)
-                #ic(min_mtime)
                 continue
 
         if max_mtime:
             if st_mtime > max_mtime:
-                #ic(stat.st_mtime)
-                #ic(min_mtime)
                 continue
 
         if empty_dir:
