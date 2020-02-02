@@ -93,11 +93,11 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
                 continue
 
         if min_mtime:
-            if stat.st_mtime < min_mtime:
+            if stat.st_mtime <= min_mtime:
                 continue
 
         if max_mtime:
-            if stat.st_mtime > max_mtime:
+            if stat.st_mtime >= max_mtime:
                 continue
 
         if empty_dir:
