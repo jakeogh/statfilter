@@ -80,6 +80,8 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
             #ic(stat)
         try:
             stat = os.stat(line)
+            if b'glide.1' in line:
+                ic(stat)
         except FileNotFoundError as e:
             if exists:
                 continue
