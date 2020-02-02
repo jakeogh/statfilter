@@ -56,8 +56,12 @@ def read_by_byte(file_object, byte):    # by ikanobori
 @click.option("--exists", is_flag=True)
 @click.option("--null", is_flag=True)
 @click.option("--precise", is_flag=True)
+@click.option("--count", is_flag=True)
 @click.option("--verbose", is_flag=True)
-def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, verbose):
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, verbose):
+
+    if count:
+        count = 0
 
     if exists:
         verify(maxone([size, min_mtime, max_mtime, exists, empty_dir]))
@@ -106,7 +110,13 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, verbose):
             if len(list(line_path.glob('*'))) > 0:
                 continue
 
+        if count is not False:
+            count += 1
+
         print(Path(os.fsdecode(line)).absolute().as_posix())
+
+    if count:
+        ic(count)
 
 
 if __name__ == "__main__":
