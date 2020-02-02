@@ -107,7 +107,7 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, verbose):
             if len(list(line_path.glob('*'))) > 0:
                 continue
 
-        print(Path(line).absolute().as_posix())
+        print(Path(os.fsdecode(line)).absolute().as_posix())
 
 
 if __name__ == "__main__":
