@@ -57,7 +57,8 @@ def read_by_null(file_object):
 @click.option("--empty-dir", is_flag=True)
 @click.option("--exists", is_flag=True)
 @click.option("--null", is_flag=True)  # todo
-def cli(size, min_mtime, max_mtime, empty_dir, exists, null):
+@click.option("--verbose", is_flag=True)  # todo
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null, verbose):
 
     # todo null, see func from irc
     if exists:
@@ -66,7 +67,8 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null):
     assert(null)
 
     for line in read_by_null(sys.stdin.buffer):
-        ic(line)
+        if verbose:
+            ic(line)
 
     #for line in sys.stdin:
     #    line = line[:-1]
