@@ -39,7 +39,6 @@ def read_by_byte(file_object, byte):    # by ikanobori
 
         while nul != -1:
             if nul == len(buf) - 1:
-                print("returning")
                 return
 
             ret, buf = buf[:nul], buf[nul+1:]
