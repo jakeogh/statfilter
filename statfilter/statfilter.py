@@ -2,38 +2,37 @@
 
 import os
 import sys
-import click
 from pathlib import Path
+from shutil import get_terminal_size
 from kcl.assertops import maxone
 from kcl.assertops import verify
 from icecream import ic
+import click
 ic.configureOutput(includeContext=True)
-from shutil import get_terminal_size
 ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 
-#'st_atime'
-#'st_atime_ns'
-#'st_blksize'
-#'st_blocks'
-#'st_ctime'
-#'st_ctime_ns'
-#'st_dev'
-#'st_gid'
-#'st_ino'
-#'st_mode'
-#'st_mtime'
-#'st_mtime_ns'
-#'st_nlink'
-#'st_rdev'
-#'st_size'
-#'st_uid'
+# 'st_atime'
+# 'st_atime_ns'
+# 'st_blksize'
+# 'st_blocks'
+# 'st_ctime'
+# 'st_ctime_ns'
+# 'st_dev'
+# 'st_gid'
+# 'st_ino'
+# 'st_mode'
+# 'st_mtime'
+# 'st_mtime_ns'
+# 'st_nlink'
+# 'st_rdev'
+# 'st_size'
+# 'st_uid'
 
 
 def read_by_byte(file_object, byte):    # by ikanobori
     buf = b""
 
     for chunk in iter(lambda: file_object.read(4096), b""):
-        #ic(chunk)
         buf += chunk
         nul = buf.find(byte)
 
@@ -45,7 +44,7 @@ def read_by_byte(file_object, byte):    # by ikanobori
             yield ret
             nul = buf.find(byte)
 
-    # TODO: Decide what you want to do with leftover
+    #  Decide what you want to do with leftover
 
 
 @click.command()
@@ -83,23 +82,25 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, ver
                 raise e
 
         if not precise:
-            min_mtime = int(min_mtime)
-            max_mtime = int(max_mtime)
+            if min_mtime is not False:
+                min_mtime = int(min_mtime)
+            if max_mtime is not False:
+                max_mtime = int(max_mtime)
 
         if precise:
             st_mtime = stat.st_mtime
         else:
             st_mtime = int(stat.st_mtime)
 
-        if size:
+        if size is not False:
             if stat.st_size < size:
                 continue
 
-        if min_mtime:
+        if min_mtime is not False:
             if st_mtime < min_mtime:
                 continue
 
-        if max_mtime:
+        if max_mtime is not False:
             if st_mtime > max_mtime:
                 continue
 
