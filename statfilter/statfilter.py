@@ -33,6 +33,7 @@ def read_by_null(file_object):
     buf = b""
 
     for chunk in iter(lambda: file_object.read(4096), b""):
+        ic(chunk)
         buf += chunk
         nul = buf.find(b"\x00")
 
