@@ -56,8 +56,9 @@ def read_by_byte(file_object, byte):    # by ikanobori
 @click.option("--null", is_flag=True)
 @click.option("--precise", is_flag=True)
 @click.option("--count", is_flag=True)
+@click.option("--delete", is_flag=True)
 @click.option("--verbose", is_flag=True)
-def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, verbose):
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, delete, verbose):
 
     if count:
         count = 0
@@ -115,6 +116,8 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, ver
             count += 1
 
         print(Path(os.fsdecode(line)).absolute().as_posix())
+        if delete:
+            os.remove(line)
 
     if count:
         ic(count)
