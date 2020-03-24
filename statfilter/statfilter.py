@@ -47,7 +47,15 @@ def read_by_byte(file_object, byte):    # by ikanobori
     #  Decide what you want to do with leftover
 
 
-def statfilter(line, size, min_mtime, max_mtime, empty_dir, exists, precise, verbose):
+def statfilter(line,
+               size=None,
+               min_mtime=None,
+               max_mtime=None,
+               empty_dir=False,
+               exists=False,
+               precise=False,
+               verbose=False):
+
     if not precise:
         if min_mtime is not None:
             min_mtime = int(min_mtime)
