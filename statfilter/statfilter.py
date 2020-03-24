@@ -47,6 +47,48 @@ def read_by_byte(file_object, byte):    # by ikanobori
     #  Decide what you want to do with leftover
 
 
+def statfilter(line, size, min_mtime, max_mtime, empty_dir, exists, precise, verbose):
+    if not precise:
+        if min_mtime is not None:
+            min_mtime = int(min_mtime)
+        if max_mtime is not None:
+            max_mtime = int(max_mtime)
+
+    try:
+        stat = os.stat(line)
+    except FileNotFoundError as e:
+        if exists:
+            return False
+        else:
+            raise e
+
+    if precise:
+        st_mtime = stat.st_mtime
+    else:
+        st_mtime = int(stat.st_mtime)
+
+    if size is not None:
+        if stat.st_size < size:
+            return False
+
+    if min_mtime is not None:
+        if st_mtime < min_mtime:
+            return False
+
+    if max_mtime is not None:
+        if st_mtime > max_mtime:
+            return False
+
+    if empty_dir:
+        line_path = Path(line)
+        if not line_path.is_dir():
+            return False
+        if len(list(line_path.glob('*'))) > 0:
+            return False
+
+    return True
+
+
 @click.command()
 @click.option("--size", type=int)
 @click.option("--min-mtime", type=float)
@@ -74,54 +116,21 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, del
         if verbose:
             ic(line)
 
-        try:
-            stat = os.stat(line)
-        except FileNotFoundError as e:
-            if exists:
-                continue
-            else:
-                raise e
+        if statfilter(line=line,
+                      size=size,
+                      min_mtime=min_mtime,
+                      max_mtime=max_mtime,
+                      empty_dir=empty_dir,
+                      exists=exists,
+                      precise=precise,
+                      verbose=verbose):
 
-        if not precise:
-            if min_mtime is not None:
-                min_mtime = int(min_mtime)
-            if max_mtime is not None:
-                max_mtime = int(max_mtime)
+            if count is not False:
+                count += 1
 
-        if precise:
-            st_mtime = stat.st_mtime
-        else:
-            st_mtime = int(stat.st_mtime)
-
-        if size is not None:
-            if stat.st_size < size:
-                continue
-
-        if min_mtime is not None:
-            if st_mtime < min_mtime:
-                continue
-
-        if max_mtime is not None:
-            if st_mtime > max_mtime:
-                continue
-
-        if empty_dir:
-            line_path = Path(line)
-            if not line_path.is_dir():
-                continue
-            if len(list(line_path.glob('*'))) > 0:
-                continue
-
-        if count is not False:
-            count += 1
-
-        print(Path(os.fsdecode(line)).absolute().as_posix())
-        if delete:
-            os.remove(line)
+            print(Path(os.fsdecode(line)).absolute().as_posix())
+            if delete:
+                os.remove(line)
 
     if count:
         ic(count)
-
-
-if __name__ == "__main__":
-    cli()
