@@ -6,6 +6,7 @@ from pathlib import Path
 from shutil import get_terminal_size
 from kcl.assertops import maxone
 from kcl.assertops import verify
+from kcl.inputops import human_filesize_to_int
 from icecream import ic
 import click
 ic.configureOutput(includeContext=True)
@@ -98,7 +99,7 @@ def statfilter(line,
 
 
 @click.command()
-@click.option("--size", type=int)
+@click.option("--size", type=str)
 @click.option("--min-mtime", type=float)
 @click.option("--max-mtime", type=float)
 @click.option("--empty-dir", is_flag=True)
@@ -109,6 +110,14 @@ def statfilter(line,
 @click.option("--delete", is_flag=True)
 @click.option("--verbose", is_flag=True)
 def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, delete, verbose):
+
+    if size:
+        try:
+            size = int(size)
+        except ValueError:
+            size = human_filesize_to_int(size, verbose=verbose)
+            if verbose:
+                ic(size)
 
     if count:
         count = 0
