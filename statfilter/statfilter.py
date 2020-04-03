@@ -37,6 +37,7 @@ def read_by_byte(file_object, byte):    # by ikanobori
         ic(len(chunk))
         buf += chunk
         sep = buf.find(byte)
+        ic(sep)
 
         while sep != -1:
             if sep == len(buf) - 1:
