@@ -34,16 +34,17 @@ def read_by_byte(file_object, byte):    # by ikanobori
     buf = b""
 
     for chunk in iter(lambda: file_object.read(4096), b""):
+        ic(len(chunk))
         buf += chunk
-        nul = buf.find(byte)
+        sep = buf.find(byte)
 
-        while nul != -1:
-            if nul == len(buf) - 1:
+        while sep != -1:
+            if sep == len(buf) - 1:
                 return
 
-            ret, buf = buf[:nul], buf[nul+1:]
+            ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
-            nul = buf.find(byte)
+            sep = buf.find(byte)
 
     #  Decide what you want to do with leftover
 
