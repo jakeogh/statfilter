@@ -40,6 +40,7 @@ def read_by_byte(file_object, byte):    # by ikanobori
 
         while sep != -1:
             if sep == len(buf) - 1:
+                ic()
                 return
 
             ret, buf = buf[:sep], buf[sep + 1:]
