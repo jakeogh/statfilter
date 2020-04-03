@@ -41,14 +41,16 @@ def read_by_byte(file_object, byte):    # by ikanobori
 
         while sep != -1:
             if sep == len(buf) - 1:
-                ic()
+                ic("return")
                 return
 
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
             sep = buf.find(byte)
-            ic(sep)
+            ic("after", sep)
 
+
+    ic("fell off end")
     #  Decide what you want to do with leftover
 
 
