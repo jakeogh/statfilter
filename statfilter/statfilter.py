@@ -34,10 +34,10 @@ def read_by_byte(file_object, byte):    # by ikanobori
     buf = b""
 
     for chunk in iter(lambda: file_object.read(4096), b""):
-        ic(len(chunk))
+        #ic(len(chunk))
         buf += chunk
         sep = buf.find(byte)
-        ic(sep, len(buf))
+        #ic(sep, len(buf))
 
         while sep != -1:
             #sep_end_marker = len(buf) - 1
@@ -49,7 +49,7 @@ def read_by_byte(file_object, byte):    # by ikanobori
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
             sep = buf.find(byte)
-            ic("after", sep)
+            #ic("after", sep)
 
 
     ic("fell off end")
