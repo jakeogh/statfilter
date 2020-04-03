@@ -47,6 +47,7 @@ def read_by_byte(file_object, byte):    # by ikanobori
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
             sep = buf.find(byte)
+            ic(sep)
 
     #  Decide what you want to do with leftover
 
