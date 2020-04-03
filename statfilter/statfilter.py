@@ -108,8 +108,9 @@ def statfilter(line,
 @click.option("--precise", is_flag=True)
 @click.option("--count", is_flag=True)
 @click.option("--delete", is_flag=True)
+@click.option("--summary", is_flag=True)
 @click.option("--verbose", is_flag=True)
-def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, delete, verbose):
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, delete, summary, verbose):
 
     if size:
         try:
@@ -129,7 +130,7 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, del
     if null:
         byte = b'\x00'
 
-    for line in read_by_byte(sys.stdin.buffer, byte=byte):
+    for index, line in enumerate(read_by_byte(sys.stdin.buffer, byte=byte)):
         if verbose:
             ic(line)
 
@@ -151,3 +152,6 @@ def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, del
 
     if count:
         ic(count)
+
+    if summary:
+        ic(index)
