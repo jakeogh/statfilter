@@ -52,7 +52,7 @@ def read_by_byte(file_object, byte):    # by ikanobori
             #ic("after", sep)
 
 
-    ic("fell off end")
+    #ic("fell off end")
     #  Decide what you want to do with leftover
 
 
