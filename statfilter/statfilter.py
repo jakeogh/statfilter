@@ -40,11 +40,11 @@ def read_by_byte(file_object, byte):    # by ikanobori
         ic(sep, len(buf))
 
         while sep != -1:
-            sep_end_marker = len(buf) - 1
-            ic(sep_end_marker)
-            if sep == sep_end_marker:
-                ic(sep, "return")
-                return
+            #sep_end_marker = len(buf) - 1
+            #ic(sep_end_marker)
+            #if sep == sep_end_marker:
+            #    ic(sep, "return")
+            #    return
 
             ret, buf = buf[:sep], buf[sep + 1:]
             yield ret
