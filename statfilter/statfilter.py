@@ -91,9 +91,13 @@ def statfilter(line,
 @click.option("--precise", is_flag=True)
 @click.option("--count", is_flag=True)
 @click.option("--delete", is_flag=True)
+@click.option("--really-delete", is_flag=True)
 @click.option("--summary", is_flag=True)
 @click.option("--verbose", is_flag=True)
-def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, delete, summary, verbose):
+def cli(size, min_mtime, max_mtime, empty_dir, exists, null, precise, count, delete, really_delete, summary, verbose):
+
+    if delete:
+        assert really_delete
 
     if size:
         try:
