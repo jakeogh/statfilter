@@ -7,6 +7,7 @@ from shutil import get_terminal_size
 from kcl.assertops import maxone
 from kcl.assertops import verify
 from kcl.inputops import human_filesize_to_int
+from kcl.byteops import read_by_byte
 from icecream import ic
 import click
 ic.configureOutput(includeContext=True)
@@ -28,32 +29,6 @@ ic.lineWrapWidth, _ = get_terminal_size((80, 20))
 # 'st_rdev'
 # 'st_size'
 # 'st_uid'
-
-
-def read_by_byte(file_object, byte):    # by ikanobori
-    buf = b""
-
-    for chunk in iter(lambda: file_object.read(4096), b""):
-        #ic(len(chunk))
-        buf += chunk
-        sep = buf.find(byte)
-        #ic(sep, len(buf))
-
-        while sep != -1:
-            #sep_end_marker = len(buf) - 1
-            #ic(sep_end_marker)
-            #if sep == sep_end_marker:
-            #    ic(sep, "return")
-            #    return
-
-            ret, buf = buf[:sep], buf[sep + 1:]
-            yield ret
-            sep = buf.find(byte)
-            #ic("after", sep)
-
-
-    #ic("fell off end")
-    #  Decide what you want to do with leftover
 
 
 def statfilter(line,
