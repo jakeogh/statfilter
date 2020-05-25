@@ -182,7 +182,7 @@ def cli(size,
         ic(index)
 
     if largest:
-        print(path(os.fsdecode(current_largest[1])).absolute().as_posix())
+        print(Path(os.fsdecode(current_largest[1])).absolute().as_posix())
     elif smallest:
-        print(path(os.fsdecode(current_smallest[1])).absolute().as_posix())
+        print(Path(os.fsdecode(current_smallest[1])).absolute().as_posix())
 
